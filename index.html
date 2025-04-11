@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modern Animated Notepad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            transition: background 0.5s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 90vw;
+            max-width: 500px;
+            height: 80vh;
+            max-height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: slideIn 0.6s ease-out;
+            z-index: 1;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .toolbar {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            touch-action: manipulation;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .color-picker {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .editor {
+            width: 100%;
+            height: calc(100% - 60px);
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+        }
+
+        #textArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            color: #e0e0e0;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 10px;
+            resize: none;
+            outline: none;
+            border-radius: 10px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #textArea:focus {
+            box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        #textArea::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+            font-style: italic;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(90deg);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
+        }
+
+        .background-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .bg-particle {
+            position: absolute;
+            background: rgba(255, 107, 107, 0.2);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0.4; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-80vh) translateX(10px); opacity: 0; }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 600px) {
+            .container {
+                width: 95vw;
+                height: 90vh;
+                max-height: 700px;
+            }
+
+            .toolbar {
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .color-picker {
+                width: 35px;
+                height: 35px;
+            }
+
+            .editor {
+                padding: 10px;
+            }
+
+            #textArea {
+                font-size: 15px;
+                padding: 8px;
+            }
+
+            .theme-toggle {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <button class="btn" onclick="clearText()">پاک کردن</button>
+            <input type="color" id="textColor" class="color-picker" title="تغییر رنگ متن">
+        </div>
+        <div class="editor">
+            <textarea id="textArea" placeholder="اینجا بنویس، دنیا رو تغییر بده..."></textarea>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()"></div>
+    </div>
+    <div class="background-particles" id="bg-particles"></div>
+
+    <script>
+        const textArea = document.getElementById('textArea');
+        const textColorPicker = document.getElementById('textColor');
+        let isDark = true;
+
+        // پاک کردن متن
+        function clearText() {
+            textArea.value = '';
+            localStorage.removeItem('notepadText');
+            textArea.focus();
+        }
+
+        // تغییر تم
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.style.background = isDark 
+                ? 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)'
+                : 'linear-gradient(135deg, #f5f7fa, #c3cfe2, #e0e4e9)';
+            textArea.style.color = isDark ? '#e0e0e0' : '#333';
+            document.querySelector('.editor').style.background = isDark
+                ? 'rgba(0, 0, 0, 0.2)'
+                : 'rgba(255, 255, 255, 0.7)';
+        }
+
+        // تغییر رنگ متن
+        textColorPicker.addEventListener('input', function() {
+            textArea.style.color = this.value;
+        });
+
+        // ایجاد ذرات پس‌زمینه
+        function createBackgroundParticles() {
+            const particlesContainer = document.getElementById('bg-particles');
+            const particleCount = window.innerWidth <= 600 ? 10 : 15; // Fewer particles on mobile
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                particle.style.cssText = `
+                    width: ${Math.random() * 6 + 3}px;
+                    height: ${Math.random() * 6 + 3}px;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation-delay: ${Math.random() * 8}s;
+                `;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // لود اولیه
+        window.onload = function() {
+            createBackgroundParticles();
+        };
+
+        // انیمیشن اسکرول نرم
+        textArea.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            this.scrollTop += e.deltaY * 0.4;
+        });
+
+        // انیمیشن فوکوس
+        textArea.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.005)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+
+        textArea.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+    </script>
+</body>
+</html>
